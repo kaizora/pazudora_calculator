@@ -1,8 +1,23 @@
----
-title: Welcome to Middleman
----
+<div class="wrapper">
+  <div class="calculator">
+    <h1>Pazudora EXP Calculator</h1>
+    <div class="search-input-wrapper">
+      <input type="search" class="typeahead" placeholder="Search by Monster" id="search-bar" required>
+      <!-- <label>Search by Monster</label> -->
+      <span class="clear-input" id="clearSearchInput"></span>
+    </div>
 
-<div class="welcome">
-  <h1>Pazudora EXP Calculator</h1>
-  <input type="search" class="typeahead" placeholder="Search by monster">
-</div><!-- .welcome -->
+    <div class="monster-info"></div>
+
+    <div class="current-exp-wrapper">
+      <input type="number" min="0" inputmode="numberic" pattern= "[0-9]*" id="current-exp" required>
+      <label>Current Exp</label>
+      <span class="clear-input" id="clearRemainingEXP"></span>
+    </div>
+
+    <div class="results">
+      <div id="remaining-exp"></div>
+      <div id="evolutions"></div>
+    </div>
+  </div>
+</div>
