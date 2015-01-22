@@ -13,7 +13,7 @@ var Calculator = (function() {
       var monsters = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: 'monsters.json',
+        prefetch: 'javascripts/monsters.json',
         limit: 7
       });
 
@@ -111,19 +111,24 @@ var Calculator = (function() {
     },
 
     showRelatedMonsters: function(id) {
-      $.getJSON('/evolutions.json', function(data) {
+      $.getJSON('javascripts/evolutions.json', function(data) {
         var evolution;
 
-        (data[id]) ? evolution = data[id][0].evolves_to : '';
-        name = '0';
+        evolution = (data[id]) ? data[id][0].evolves_to : '';
+        var name = '';
 
         if (evolution) {
           $('#evolutions').html(function() {
             return '<div class="evolves-to">Evolves to:</div>' +
-                    '<img src="images/monsters/' + evolution + '.png" alt=' + name + '>';
+                    '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png" alt="' + name + '">';
           });
         }
       });
+    },
+
+    selectMonster: function(id) {
+      console.log(id);
+      $(".typeahead").trigger('selected', id);
     },
 
     translateType: function(typeCode) {
