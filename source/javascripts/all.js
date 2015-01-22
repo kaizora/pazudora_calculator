@@ -42,7 +42,6 @@ var Calculator = (function() {
       }).on('typeahead:selected',  function (e, datum, name) {
         Calculator.showMonster(datum);
         Calculator.showRelatedMonsters(datum.id);
-        $('.current-exp-wrapper').addClass('show-input').siblings('input').val('');
         Calculator.bindRemainingEXP();
       });
     },
@@ -108,6 +107,15 @@ var Calculator = (function() {
                 '<div class="max-lvl">Max Level: ' + datum.max_level + '</div>' +
                 '<div class="exp-to-max">Exp to Max: <span>' + Calculator.calculateMaxEXP(datum.xp_curve, datum.max_level) + '</span></div>';
       });
+
+      $('.current-exp-wrapper').siblings('input').val('');
+
+      if ( $('.exp-to-max span').text() !== '0' ) {
+        $('.current-exp-wrapper').addClass('show-input');
+      } else {
+        $('.current-exp-wrapper').removeClass('show-input')
+      }
+
     },
 
     showRelatedMonsters: function(id) {
