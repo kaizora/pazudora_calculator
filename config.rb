@@ -13,7 +13,5 @@ configure :build do
   activate :minify_javascript
   activate :asset_hash
   activate :relative_assets
-
-  # Or use a different image path
-  # set :http_prefix, "/Content/images/"
+  set :relative_links, true
 end
