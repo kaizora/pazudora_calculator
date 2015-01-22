@@ -117,12 +117,13 @@ var Calculator = (function() {
         evolution = (data[id]) ? data[id][0].evolves_to : '';
         var name = '';
 
-        if (evolution) {
-          $('#evolutions').html(function() {
+
+        $('#evolutions').empty().html(function() {
+          if (evolution) {
             return '<div class="evolves-to">Evolves to:</div>' +
-                    '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png" alt="' + name + '">';
-          });
-        }
+                  '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png" alt="' + name + '">';
+          }
+        });
       });
     },
 
