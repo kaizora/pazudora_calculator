@@ -13,7 +13,7 @@ var Calculator = (function() {
       var monsters = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: 'monsters.json',
+        prefetch: '/javascripts/monsters.json',
         limit: 7
       });
 
