@@ -144,6 +144,19 @@ input:valid ~ label {
   margin: 40px 0;
 }
 
+.exp-to-max span {
+  font-weight: 600;
+}
+
+.monster-details {
+  width: 100%;
+
+  td:first-child {
+    width: 30%;
+    vertical-align: text-top;
+  }
+}
+
 .current-exp-wrapper {
   display: none;
   position: relative;

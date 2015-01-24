@@ -52,19 +52,28 @@ var Calculator = (function() {
     },
 
     bindClearInputs: function() {
-      $('.clear-input').bind( 'click', function(e) {
+      this.bindClearSearchInput();
+      this.bindClearRemainingEXP();
+    },
+
+    bindClearSearchInput: function() {
+      $('#clearSearchInput').bind('click', function(e) {
         e.preventDefault();
 
-        if ($(this).attr('id', 'clearSearchInput')) {
-          $('#current-exp').val('');
-          $(this).siblings('.twitter-typeahead').find('.typeahead').typeahead('val', '').focus();
-          $(this).siblings('.twitter-typeahead').removeClass('has-input');
-        }
+        $('#current-exp').removeClass('error').val('');
+        $(this).siblings('.twitter-typeahead').find('.typeahead').typeahead('val', '').focus();
+        $(this).siblings('.twitter-typeahead').removeClass('has-input');
+        $('.current-exp-wrapper').removeClass('has-input');
+      });
+    },
 
-        if ($(this).attr('id', 'clearRemainingEXP')) {
-          $(this).siblings('input').val('').focus();
-          $('#remaining-exp').empty();
-        }
+    bindClearRemainingEXP: function() {
+      $('#clearRemainingEXP').bind('click', function(e) {
+        e.preventDefault();
+
+        $('.current-exp-wrapper').removeClass('has-input');
+        $('#current-exp').removeClass('error').val('').focus();
+        $('#remaining-exp').empty();
       });
     },
 
@@ -96,19 +105,23 @@ var Calculator = (function() {
     showMonster: function(datum) {
       $('.monster-info').html(function() {
         return '<img src="images/monsters/' + datum.id + '.png" alt=' + datum.name + '>' +
-                '<div class="name">Name: ' + datum.name + '</div>' +
-                '<div class="jp-name">JP Name: ' + datum.name_jp + '</div>' +
-                '<div class="type">Type: ' + Calculator.translateType(datum.type) +
-                ((datum.type2 != null) ? ' / ' + Calculator.translateType(datum.type2) : '') + '</div>' +
-                '<div class="element">Element: ' + Calculator.translateElement(datum.element) +
-                ((datum.element2 != null) ? ' / ' + Calculator.translateElement(datum.element2) : '') + '</div>' +
-                '<div class="rarity">Rarity: ' + datum.rarity + '</div>' +
-                '<div class="cost">Cost: ' + datum.team_cost + '</div>' +
-                '<div class="max-lvl">Max Level: ' + datum.max_level + '</div>' +
-                '<div class="exp-to-max">Exp to Max: <span>' + Calculator.calculateMaxEXP(datum.xp_curve, datum.max_level) + '</span></div>';
+                '<table class="monster-details">' +
+                '<tr class="name"><td>Name:</td><td>' + datum.name + '</td></tr>' +
+                '<tr class="jp-name"><td>JP Name:</td><td>' + datum.name_jp + '</td></tr>' +
+                '<tr class="type"><td>Type:</td><td>' + Calculator.translateType(datum.type) +
+                ((datum.type2 != null) ? ' / ' + Calculator.translateType(datum.type2) : '') + '</td></tr>' +
+                '<tr class="element"><td>Element:</td><td>' + Calculator.translateElement(datum.element) +
+                ((datum.element2 != null) ? ' / ' + Calculator.translateElement(datum.element2) : '') + '</td></tr>' +
+                '<tr class="rarity"><td>Rarity:</td><td>' + datum.rarity + '</td></tr>' +
+                '<tr class="cost"><td>Cost:</td><td>' + datum.team_cost + '</td></tr>' +
+                '<tr class="max-lvl"><td>Max Level:</td><td>' + datum.max_level + '</td></tr>' +
+                '<tr class="exp-to-max"><td>Exp to Max:</td><td><span>' +
+                Calculator.calculateMaxEXP(datum.xp_curve, datum.max_level) + '</span></td></tr>' +
+                '</table>';
       });
 
-      $('.current-exp-wrapper').siblings('input').val('');
+      $('#current-exp').val('');
+      $('#remaining-exp').empty();
 
       if ( $('.exp-to-max span').text() !== '0' ) {
         $('.current-exp-wrapper').addClass('show-input');
@@ -128,7 +141,7 @@ var Calculator = (function() {
 
         $('#evolutions').empty().html(function() {
           if (evolution) {
-            return '<div class="evolves-to">Evolves to:</div>' +
+            return '<p class="evolves-to">Evolves to:</p>' +
                   '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png" alt="' + name + '">';
           }
         });
