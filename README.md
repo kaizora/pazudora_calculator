@@ -11,4 +11,5 @@ Future Features:
 - Clicking on Evo would take you to that monster's info.
 - May include Evo chain on monster info page.
 - Most recent searches / most popular searches (requires back-end integration)
-- Local storage to store last entered exp value for searched monsters (?)
+- Local storage to store previously entered exp for searched monsters (?)
+- UI theme changer (allows for user to change the skin of the UI)
