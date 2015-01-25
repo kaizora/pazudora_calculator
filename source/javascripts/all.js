@@ -148,7 +148,7 @@ var Calculator = (function() {
         var evolution = (data[id]) ? data[id][0].evolves_to : '';
 
         $('#evolutions').empty().html(function() {
-          if (evolution) {
+          if (evolution && data[id][0].is_ultimate !== true) {
             return '<p class="evolves-to">Evolves to:</p>' +
                   '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">';
           }
