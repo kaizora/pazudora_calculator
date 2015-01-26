@@ -131,20 +131,19 @@ var Calculator = (function() {
     showRelatedMonsters: function(id) {
       if (localStorage.getItem('evolutions') === null) {
         $.getJSON('javascripts/evolutions.json', function(data) {
-          localStorage.setItem('evolutions', JSON.stringify(data));
-
           var evolution = (data[id]) ? data[id][0].evolves_to : '';
 
           $('#evolutions').empty().html(function() {
-            if (evolution) {
+            if (evolution && data[id][0].is_ultimate !== true) {
               return '<p class="evolves-to">Evolves to:</p>' +
                     '<img onclick=javascript:Calculator.selectMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">';
             }
           });
+
+          localStorage.setItem('evolutions', JSON.stringify(data));
         });
       } else {
-        data = JSON.parse(localStorage.getItem('evolutions'));
-
+        var data = JSON.parse(localStorage.getItem('evolutions'));
         var evolution = (data[id]) ? data[id][0].evolves_to : '';
 
         $('#evolutions').empty().html(function() {
@@ -192,9 +191,9 @@ var Calculator = (function() {
     },
 
     calculateMaxEXP: function(expCurve, maxlvl) {
-      var maxExp = numeral((expCurve) * Math.pow( ((maxlvl - 1) / 98), 2.5 )).format('0,0') || 0;
+      var maxExp = numeral((expCurve) * Math.pow( ((maxlvl - 1) / 98), 2.5 )).format('0,0');
 
-      return maxExp;
+      return maxExp || 0;
     }
 
   }
