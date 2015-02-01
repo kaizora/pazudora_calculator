@@ -8,8 +8,9 @@ Thank you [PADHerder](https://www.padherder.com/) for providing their API with a
 
 Future Features:
 ----
-- Clicking on Evo would take you to that monster's info.
-- May include Evo chain on monster info page.
+- ~~Clicking on Evo would take you to that monster's info~~
+- Include Evo chain on monster info
 - Most recent searches / most popular searches (requires back-end integration)
 - Local storage to store previously entered exp for searched monsters (?)
 - UI theme changer (allows for user to change the skin of the UI)
+- Monster tabbing? (allows user to have more than one monster "tab" open at once within the page)
