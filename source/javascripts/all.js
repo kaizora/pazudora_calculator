@@ -5,6 +5,11 @@
 var Calculator = (function() {
   var pub = {};
 
+  pub.Data = {
+    evolutions: null,
+    monsters: null
+  };
+
   function initBloodhound() {
     var monsters = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -37,22 +42,45 @@ var Calculator = (function() {
       }
     }).on('typeahead:selected',  function (e, datum, name) {
       Calculator.showMonster(datum);
-      Calculator.showRelatedMonsters(datum.id);
+      Calculator.showEvoMonsters(datum.id);
       Calculator.bindRemainingEXP();
     });
 
-    pub.monsters = monsters;
+    pub.Data.monsters = monsters;
+  };
+
+  function getEvolutionsData() {
+    if (!supportsLocalStorage || localStorage.getItem('evolutions') === null) {
+      $.getJSON('javascripts/evolutions.json', function(data) {
+        pub.Data.evolutions = data;
+
+        if (supportsLocalStorage()) {
+          localStorage.setItem('evolutions', JSON.stringify(data));
+        }
+      });
+    } else {
+      pub.Data.evolutions = JSON.parse(localStorage.getItem('evolutions'));
+    }
+  };
+
+  function supportsLocalStorage() {
+    try {
+      return 'localStorage' in window && window['localStorage'] !== null;
+    } catch(e) {
+      return false;
+    }
   };
 
   pub.init = function() {
     initTypeahead();
-    this.bindEvents();
+    getEvolutionsData();
+    pub.bindEvents();
   };
 
   pub.bindEvents = function() {
-    this.addClearToInputs();
-    this.bindClearSearchInput();
-    this.bindClearRemainingEXP();
+    pub.addClearToInputs();
+    pub.bindClearSearchInput();
+    pub.bindClearRemainingEXP();
   };
 
   pub.bindClearSearchInput = function() {
@@ -130,54 +158,29 @@ var Calculator = (function() {
     }
   };
 
-  pub.showRelatedMonsters = function(id) {
-
+  pub.showEvoMonsters = function(id) {
     $('#evolutions').empty();
 
-    if (localStorage.getItem('evolutions') === null) {
-      $.getJSON('javascripts/evolutions.json', function(data) {
+    if (pub.Data.evolutions[id]) {
+      $('#evolutions').append('<p>Evolves to:</p>');
 
-        if (data[id]) {
-          $('#evolutions').append('<p>Evolves to:</p>');
+      for (var i = 0; i < pub.Data.evolutions[id].length; i++) {
+        var evolution = (pub.Data.evolutions[id]) ? pub.Data.evolutions[id][i].evolves_to : '';
 
-          for (var i = 0; i < data[id].length; i++) {
-            var evolution = (data[id]) ? data[id][i].evolves_to : '';
-
-            if (evolution) {
-              $('#evolutions').append('<img onclick=javascript:Calculator.selectEvoMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">');
-            }
-          }
-
-          localStorage.setItem('evolutions', JSON.stringify(data));
+        if (evolution) {
+          $('#evolutions').append('<img onclick=javascript:Calculator.selectEvoMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">');
         }
-      });
-
-    } else {
-      var data = JSON.parse(localStorage.getItem('evolutions'));
-
-      if (data[id]) {
-        $('#evolutions').append('<p>Evolves to:</p>');
-
-        for (var i = 0; i < data[id].length; i++) {
-          var evolution = (data[id]) ? data[id][i].evolves_to : '';
-
-          if (evolution) {
-            $('#evolutions').append('<img onclick=javascript:Calculator.selectEvoMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">');
-          }
-        }
-
-        localStorage.setItem('evolutions', JSON.stringify(data));
       }
     }
   };
 
   pub.selectEvoMonster = function(id) {
-    for (var i = 0; i < pub.monsters.index.datums.length; i++) {
-      if ( id === pub.monsters.index.datums[i].id ) {
-        $(".typeahead").trigger('typeahead:selected', pub.monsters.index.datums[i]);
+    for (var i = 0; i < pub.Data.monsters.index.datums.length; i++) {
+      if (id === pub.Data.monsters.index.datums[i].id) {
+        $(".typeahead").trigger('typeahead:selected', pub.Data.monsters.index.datums[i]);
       }
     }
-  },
+  };
 
   pub.translateType = function(typeCode) {
     var types = {
@@ -195,7 +198,7 @@ var Calculator = (function() {
     };
 
     return types[typeCode] || '';
-  },
+  };
 
   pub.translateElement = function(elementCode) {
     var elements = {
@@ -207,13 +210,13 @@ var Calculator = (function() {
     };
 
     return elements[elementCode] || '';
-  },
+  };
 
   pub.calculateMaxEXP = function(expCurve, maxlvl) {
     var maxExp = numeral((expCurve) * Math.pow( ((maxlvl - 1) / 98), 2.5 )).format('0,0');
 
     return maxExp || 0;
-  }
+  };
 
   return pub;
 
