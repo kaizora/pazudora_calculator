@@ -43,7 +43,6 @@ var Calculator = (function() {
     }).on('typeahead:selected',  function (e, datum, name) {
       Calculator.showMonster(datum);
       Calculator.showEvoMonsters(datum.id);
-      Calculator.bindRemainingEXP();
     });
 
     pub.Data.monsters = monsters;
@@ -71,19 +70,15 @@ var Calculator = (function() {
     }
   };
 
-  pub.init = function() {
-    initTypeahead();
-    getEvolutionsData();
-    pub.bindEvents();
+
+  function bindEvents() {
+    addClearToInputs();
+    bindClearSearchInput();
+    bindClearRemainingEXP();
+    bindRemainingEXP();
   };
 
-  pub.bindEvents = function() {
-    pub.addClearToInputs();
-    pub.bindClearSearchInput();
-    pub.bindClearRemainingEXP();
-  };
-
-  pub.bindClearSearchInput = function() {
+  function bindClearSearchInput() {
     $('#clearSearchInput').bind('click', function(e) {
       e.preventDefault();
 
@@ -94,7 +89,7 @@ var Calculator = (function() {
     });
   };
 
-  pub.bindClearRemainingEXP = function() {
+  function bindClearRemainingEXP() {
     $('#clearRemainingEXP').bind('click', function(e) {
       e.preventDefault();
 
@@ -104,7 +99,7 @@ var Calculator = (function() {
     });
   };
 
-  pub.bindRemainingEXP = function() {
+  function bindRemainingEXP() {
     $('.calculator').on('keyup', '#current-exp', function(e) {
       var maxEXP = numeral().unformat($('.exp-to-max span').text());
       var currentEXP = $('#current-exp').val() || 0;
@@ -121,12 +116,18 @@ var Calculator = (function() {
     });
   };
 
-  pub.addClearToInputs = function() {
+  function addClearToInputs() {
     $('input').on('keyup', function() {
       var thisParent = $(this).parent();
 
       $(this).val().length ? $(thisParent).addClass('has-input') : $(thisParent).removeClass('has-input');
     });
+  };
+
+  pub.init = function() {
+    initTypeahead();
+    getEvolutionsData();
+    bindEvents();
   };
 
   pub.showMonster = function(datum) {
