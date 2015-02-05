@@ -47,6 +47,7 @@ var Calculator = (function() {
     }).on('typeahead:selected',  function (e, datum, name) {
       Calculator.showMonster(datum);
       Calculator.showEvoMonsters(datum.id);
+      $(this).blur();
     });
 
     pub.Data.monsters = monsters;
