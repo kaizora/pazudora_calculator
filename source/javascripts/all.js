@@ -3,11 +3,15 @@
 //= require external/numeral.min
 
 var Calculator = (function() {
-  var pub = {};
 
-  pub.Data = {
-    evolutions: null,
-    monsters: null
+  var pub = {
+    Monster: {
+      materials: []
+    },
+    Data: {
+      evolutions: null,
+      monsters: null
+    }
   };
 
   function initBloodhound() {
@@ -95,7 +99,7 @@ var Calculator = (function() {
 
       $('.current-exp-wrapper').removeClass('has-input');
       $('#current-exp').removeClass('error').val('').focus();
-      $('#remaining-exp').empty();
+      $('.remaining-exp').empty();
     });
   };
 
@@ -112,7 +116,7 @@ var Calculator = (function() {
         $('#current-exp').removeClass('error');
       }
 
-      $('#remaining-exp').html(numeral(remainingEXP).format('0,0'));
+      $('.remaining-exp').html(numeral(remainingEXP).format('0,0'));
     });
   };
 
@@ -132,9 +136,8 @@ var Calculator = (function() {
 
   pub.showMonster = function(datum) {
     $('.monster-info').html(function() {
-      return '<img src="images/monsters/' + datum.id + '.png" alt=' + datum.name + '>' +
+      return '<img class="monster" src="images/monsters/' + datum.id + '.png" alt=' + datum.name + '>' +
               '<table class="monster-details">' +
-              '<tr class="id"><td>ID:</td><td>' + datum.id + '</td></tr>' +
               '<tr class="name"><td>Name:</td><td>' + datum.name + '</td></tr>' +
               '<tr class="jp-name"><td>JP Name:</td><td>' + datum.name_jp + '</td></tr>' +
               '<tr class="type"><td>Type:</td><td>' + Calculator.translateType(datum.type) +
@@ -150,7 +153,7 @@ var Calculator = (function() {
     });
 
     $('#current-exp').val('');
-    $('#remaining-exp').empty();
+    $('.remaining-exp').empty();
 
     if ( $('.exp-to-max span').text() !== '0' ) {
       $('.current-exp-wrapper').addClass('show-input');
@@ -160,16 +163,41 @@ var Calculator = (function() {
   };
 
   pub.showEvoMonsters = function(id) {
-    $('#evolutions').empty();
+    $('.evolutions').empty();
+
+    pub.Monster.materials = [];
 
     if (pub.Data.evolutions[id]) {
-      $('#evolutions').append('<p>Evolves to:</p>');
+      $('.evolutions').append('<h3>Evolutions:</h3>');
 
       for (var i = 0; i < pub.Data.evolutions[id].length; i++) {
         var evolution = (pub.Data.evolutions[id]) ? pub.Data.evolutions[id][i].evolves_to : '';
 
         if (evolution) {
-          $('#evolutions').append('<img onclick=javascript:Calculator.selectEvoMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">');
+          $('.evolutions').append('<div class="evo-block" id="evo' + i + '">' +
+            '<img class="monster evo" onclick=javascript:Calculator.selectEvoMonster(' + evolution + '); src="images/monsters/' + evolution + '.png">' +
+            '</div>');
+
+          pub.Monster.materials.push(pub.Data.evolutions[id][i].materials);
+        }
+      }
+
+      pub.showEvoMaterials(pub.Monster.materials);
+    }
+  };
+
+  pub.showEvoMaterials = function(materials) {
+    for (var i = 0; i < materials.length; i++) {
+      for (var j = 0; j < materials[i].length; j++) {
+        var id = materials[i][j][0];
+        var num = materials[i][j][1];
+
+        $('.evolutions #evo' + i).append('<img class="material" src="images/monsters/' + id + '.png">');
+
+        if (num > 1) {
+          for (var k = 1; k < num; k++) {
+            $('.evolutions #evo' + i).append('<img class="material" src="images/monsters/' + id + '.png">');
+          }
         }
       }
     }
@@ -178,7 +206,8 @@ var Calculator = (function() {
   pub.selectEvoMonster = function(id) {
     for (var i = 0; i < pub.Data.monsters.index.datums.length; i++) {
       if (id === pub.Data.monsters.index.datums[i].id) {
-        $(".typeahead").trigger('typeahead:selected', pub.Data.monsters.index.datums[i]);
+        $('.typeahead').trigger('typeahead:selected', pub.Data.monsters.index.datums[i]);
+        $('.typeahead').typeahead('val', pub.Data.monsters.index.datums[i].name);
       }
     }
   };

@@ -23,6 +23,10 @@ h1 {
   font-size: 32px;
 }
 
+h3 {
+  font-weight: 400;
+}
+
 .wrapper {
   margin: 0 auto;
   width: 90%;
@@ -140,6 +144,26 @@ input:valid ~ label {
   z-index: 0;
 }
 
+.current-exp-wrapper {
+  display: none;
+  position: relative;
+  margin-bottom: 20px;
+  width: 290px;
+
+  @media screen and (min-width: 420px) {
+    width: 400px;
+  }
+
+  &.show-input {
+    display: block;
+  }
+}
+
+.remaining-exp {
+  font-size: 36px;
+}
+
+
 .monster-info {
   margin: 40px 0;
 }
@@ -157,30 +181,24 @@ input:valid ~ label {
   }
 }
 
-.current-exp-wrapper {
-  display: none;
-  position: relative;
-  margin-bottom: 20px;
-  width: 290px;
-
-  @media screen and (min-width: 420px) {
-    width: 400px;
-  }
-
-  &.show-input {
-    display: block;
-  }
+.monster {
+  width: 60px;
+  height: 60px;
 }
 
-#remaining-exp {
-  font-size: 36px;
+.material {
+  width: 40px;
+  height: 40px;
 }
 
-#evolutions img {
+.evo-block {
+  margin-bottom: 10px;
+}
+
+.evo {
   cursor: pointer;
   margin-right: 10px;
 }
-
 
 /* Typeahead Styles */
 
