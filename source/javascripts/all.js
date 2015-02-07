@@ -47,7 +47,13 @@ var Calculator = (function() {
     }).on('typeahead:selected',  function (e, datum, name) {
       Calculator.showMonster(datum);
       Calculator.showEvoMonsters(datum.id);
+
+      clearEXPFields();
       $(this).blur();
+
+      $('html, body').animate({
+          scrollTop: $(".monster-info").offset().top - 15
+      }, 300);
     });
 
     pub.Data.monsters = monsters;
@@ -75,12 +81,12 @@ var Calculator = (function() {
     }
   };
 
-
+  // bindings
   function bindEvents() {
-    addClearToInputs();
     bindClearSearchInput();
     bindClearRemainingEXP();
     bindRemainingEXP();
+    bindClearToInputs();
   };
 
   function bindClearSearchInput() {
@@ -98,9 +104,8 @@ var Calculator = (function() {
     $('#clearRemainingEXP').bind('click', function(e) {
       e.preventDefault();
 
-      $('.current-exp-wrapper').removeClass('has-input');
-      $('#current-exp').removeClass('error').val('').focus();
-      $('.remaining-exp').empty();
+      clearEXPFields();
+      $('#current-exp').focus();
     });
   };
 
@@ -121,12 +126,61 @@ var Calculator = (function() {
     });
   };
 
-  function addClearToInputs() {
+  function bindClearToInputs() {
     $('input').on('keyup', function() {
       var thisParent = $(this).parent();
 
       $(this).val().length ? $(thisParent).addClass('has-input') : $(thisParent).removeClass('has-input');
     });
+  };
+
+  function clearEXPFields() {
+    $('.current-exp-wrapper').removeClass('has-input');
+    $('#current-exp').removeClass('error').val('');
+    $('.remaining-exp').empty();
+
+    if ($('.exp-to-max span').text() !== '0') {
+      $('.current-exp-wrapper').addClass('show-input');
+    } else {
+      $('.current-exp-wrapper').removeClass('show-input')
+    }
+  };
+
+  // core functionality
+  function translateType(typeCode) {
+    var types = {
+      0:  'Evo Material',
+      1:  'Balanced',
+      2:  'Physical',
+      3:  'Healer',
+      4:  'Dragon',
+      5:  'God',
+      6:  'Attacker',
+      7:  'Devil',
+      12: 'Awoken Skill Material',
+      13: 'Protected',
+      14: 'Enhance Material'
+    };
+
+    return types[typeCode] || '';
+  };
+
+  function translateElement(elementCode) {
+    var elements = {
+      0: 'Fire',
+      1: 'Water',
+      2: 'Wood',
+      3: 'Light',
+      4: 'Dark'
+    };
+
+    return elements[elementCode] || '';
+  };
+
+  function calculateMaxEXP(expCurve, maxlvl) {
+    var maxExp = numeral((expCurve) * Math.pow( ((maxlvl - 1) / 98), 2.5 )).format('0,0');
+
+    return maxExp || 0;
   };
 
   pub.init = function() {
@@ -141,26 +195,17 @@ var Calculator = (function() {
               '<table class="monster-details">' +
               '<tr class="name"><td>Name:</td><td>' + datum.name + '</td></tr>' +
               '<tr class="jp-name"><td>JP Name:</td><td>' + datum.name_jp + '</td></tr>' +
-              '<tr class="type"><td>Type:</td><td>' + Calculator.translateType(datum.type) +
-              ((datum.type2 != null) ? ' / ' + Calculator.translateType(datum.type2) : '') + '</td></tr>' +
-              '<tr class="element"><td>Element:</td><td>' + Calculator.translateElement(datum.element) +
-              ((datum.element2 != null) ? ' / ' + Calculator.translateElement(datum.element2) : '') + '</td></tr>' +
+              '<tr class="type"><td>Type:</td><td>' + translateType(datum.type) +
+              ((datum.type2 != null) ? ' / ' + translateType(datum.type2) : '') + '</td></tr>' +
+              '<tr class="element"><td>Element:</td><td>' + translateElement(datum.element) +
+              ((datum.element2 != null) ? ' / ' + translateElement(datum.element2) : '') + '</td></tr>' +
               '<tr class="rarity"><td>Rarity:</td><td>' + datum.rarity + '</td></tr>' +
               '<tr class="cost"><td>Cost:</td><td>' + datum.team_cost + '</td></tr>' +
               '<tr class="max-lvl"><td>Max Level:</td><td>' + datum.max_level + '</td></tr>' +
               '<tr class="exp-to-max"><td>Exp to Max:</td><td><span>' +
-              Calculator.calculateMaxEXP(datum.xp_curve, datum.max_level) + '</span></td></tr>' +
+              calculateMaxEXP(datum.xp_curve, datum.max_level) + '</span></td></tr>' +
               '</table>';
     });
-
-    $('#current-exp').val('');
-    $('.remaining-exp').empty();
-
-    if ( $('.exp-to-max span').text() !== '0' ) {
-      $('.current-exp-wrapper').addClass('show-input');
-    } else {
-      $('.current-exp-wrapper').removeClass('show-input')
-    }
   };
 
   pub.showEvoMonsters = function(id) {
@@ -193,12 +238,8 @@ var Calculator = (function() {
         var id = materials[i][j][0];
         var num = materials[i][j][1];
 
-        $('.evolutions #evo' + i).append('<img class="material" src="images/monsters/' + id + '.png">');
-
-        if (num > 1) {
-          for (var k = 1; k < num; k++) {
-            $('.evolutions #evo' + i).append('<img class="material" src="images/monsters/' + id + '.png">');
-          }
+        for (var k = 0; k < num; k++) {
+          $('.evolutions #evo' + i).append('<img class="material" src="images/monsters/' + id + '.png">');
         }
       }
     }
@@ -211,42 +252,6 @@ var Calculator = (function() {
         $('.typeahead').typeahead('val', pub.Data.monsters.index.datums[i].name);
       }
     }
-  };
-
-  pub.translateType = function(typeCode) {
-    var types = {
-      0:  'Evo Material',
-      1:  'Balanced',
-      2:  'Physical',
-      3:  'Healer',
-      4:  'Dragon',
-      5:  'God',
-      6:  'Attacker',
-      7:  'Devil',
-      12: 'Awoken Skill Material',
-      13: 'Protected',
-      14: 'Enhance Material'
-    };
-
-    return types[typeCode] || '';
-  };
-
-  pub.translateElement = function(elementCode) {
-    var elements = {
-      0: 'Fire',
-      1: 'Water',
-      2: 'Wood',
-      3: 'Light',
-      4: 'Dark'
-    };
-
-    return elements[elementCode] || '';
-  };
-
-  pub.calculateMaxEXP = function(expCurve, maxlvl) {
-    var maxExp = numeral((expCurve) * Math.pow( ((maxlvl - 1) / 98), 2.5 )).format('0,0');
-
-    return maxExp || 0;
   };
 
   return pub;

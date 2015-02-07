@@ -12,7 +12,13 @@
   </head>
 
   <body>
-    <%= yield %>
+    <main class="content">
+      <%= yield %>
+    </main>
+
+    <footer>
+      © 2015 Pazudora EVO Calculator, designed by <a href="http://kaizora.github.io/" target="_blank">Yan Li</a>
+    </footer>
   </body>
   <%= javascript_include_tag  "all" %>
 </html>
