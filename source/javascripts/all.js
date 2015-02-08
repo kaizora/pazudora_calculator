@@ -50,10 +50,9 @@ var Calculator = (function() {
 
       clearEXPFields();
       $(this).blur();
+      scrollToMonster();
 
-      $('html, body').animate({
-          scrollTop: $(".monster-info").offset().top - 15
-      }, 300);
+      $('.twitter-typeahead').addClass('has-input');
     });
 
     pub.Data.monsters = monsters;
@@ -81,6 +80,12 @@ var Calculator = (function() {
     }
   };
 
+  function scrollToMonster() {
+    $('html, body').animate({
+        scrollTop: $(".monster-info").offset().top - 15
+    }, 300);
+  };
+
   // bindings
   function bindEvents() {
     bindClearSearchInput();
@@ -93,8 +98,8 @@ var Calculator = (function() {
     $('#clearSearchInput').bind('click', function(e) {
       e.preventDefault();
 
-      $(this).siblings('.twitter-typeahead').find('.typeahead').typeahead('val', '').focus();
-      $(this).siblings('.twitter-typeahead').removeClass('has-input');
+      $('.twitter-typeahead').find('.typeahead').typeahead('val', '').focus();
+      $('.twitter-typeahead').removeClass('has-input');
     });
   };
 
