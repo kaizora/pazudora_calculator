@@ -93,10 +93,8 @@ var Calculator = (function() {
     $('#clearSearchInput').bind('click', function(e) {
       e.preventDefault();
 
-      $('#current-exp').removeClass('error').val('');
       $(this).siblings('.twitter-typeahead').find('.typeahead').typeahead('val', '').focus();
       $(this).siblings('.twitter-typeahead').removeClass('has-input');
-      $('.current-exp-wrapper').removeClass('has-input');
     });
   };
 
