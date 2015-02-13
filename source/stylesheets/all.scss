@@ -123,6 +123,7 @@ input[type=number] {
   outline: 0;
   transition: border-color 0.2s ease-in;
   box-sizing: border-box;
+  -moz-appearance: textfield;
 
   &:hover,
   &:focus {
@@ -136,6 +137,10 @@ input[type=number] {
       color: $error-red;
     }
   }
+}
+
+input:required {
+    box-shadow: none;
 }
 
 input[type=number]::-webkit-inner-spin-button,
