@@ -1,0 +1,44 @@
+/* Typeahead Styles */
+
+.twitter-typeahead {
+  text-align: left;
+  width: 100%;
+
+  p {
+    margin: 0;
+  }
+}
+
+.tt-menu.tt-open {
+  right: 0;
+}
+
+.tt-dataset-monsters {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+
+  .tt-suggestions {
+    margin: 0;
+    padding: 0;
+  }
+
+  .tt-suggestion {
+    margin: 0;
+    padding: 10px;
+    height: auto;
+    width: 100%;
+
+    &.tt-cursor {
+      background: $sea-green;
+      color: #fff;
+    }
+  }
+}
+
+.tt-empty-msg {
+  padding: 10px;
+  color: #222;
+}

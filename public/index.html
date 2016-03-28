@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pazudora EVO Calculator</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
+    <link href='css/main.css' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+    <main class="content">
+      <div class="wrapper">
+        <div class="calculator">
+          <h1>Pazudora EVO Calculator</h1>
+          <div class="search-input-wrapper">
+            <input type="search" class="typeahead" placeholder="Search by Monster" id="search-bar" autocomplete="off" required>
+            <span class="clear-input" id="clearSearchInput"></span>
+          </div>
+
+          <div class="monster-info"></div>
+
+          <div class="current-exp-wrapper">
+            <input type="number" min="0" inputmode="numberic" pattern= "[0-9]*" id="current-exp" autocomplete="off" required>
+            <label>Current Exp</label>
+            <span class="clear-input" id="clearRemainingEXP"></span>
+          </div>
+
+          <div class="results">
+            <div class="remaining-exp"></div>
+            <div class="evolutions"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      © 2015 Pazudora EVO Calculator, designed and developed by <a href="http://github.io/yanandcoffee" target="_blank">Yan Li</a>
+    </footer>
+  </body>
+  <script src='js/bundle.js'></script>
+</html>
